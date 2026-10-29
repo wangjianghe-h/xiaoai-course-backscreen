@@ -6,7 +6,7 @@
 
 - 组件名（business）：`xiaoai_course_schedule`（见 `widget_info.json`，不可改名）
 - 类型：`notification`（由焦点通知驱动）
-- 模板：`xiaoai_course_schedule.zip`（MAML v2，`frameRate=1` 低开销版）
+- 模板：`xiaoai_course_schedule.zip`（MAML v2，`frameRate=1` 低开销版；左侧竖线与标题上沿对齐）
 - 最低 REAREye：251
 
 ## 安装
@@ -14,7 +14,11 @@
 1. 安装「课程表超级岛」模块（背屏支持版）并在 LSPosed 中启用，作用域包含 `com.miui.voiceassist`。
 2. 安装 REAREye，开启：更多 → 通知与路由 → **允许焦点通知在背屏显示**。
 3. REAREye → 配置 → 背屏中心 → 背屏个性化 → **组件管理** → `xiaoai_course_schedule` → 编辑 → 模板文件路径 → 选择文件 → 选 `xiaoai_course_schedule.zip` → 确定。
-4. 重启背屏服务让模板重新部署：`adb shell am force-stop com.xiaomi.subscreencenter`，然后核对 `re_xiaoai_course_schedule` 是否已生成。
+4. **必须保留一条通知路由**（删掉后背屏会收不到卡片）：
+   REAREye → 通知与路由 → 通知路由 → 新增 →
+   目标包名 `com.miui.voiceassist`、通知规则 `regex:.*`、组件 `xiaoai_course_schedule`。
+   这条路由是 REAREye 对该包的**包级强制放行**来源，仅靠「允许焦点通知在背屏显示」的动态放行不够（实测会丢卡片）；`com.android.keyguard` 不需要路由。
+5. 重启背屏服务让模板重新部署：`adb shell am force-stop com.xiaomi.subscreencenter`，然后核对 `re_xiaoai_course_schedule` 是否已生成。
 
 ## 与模块的字段契约
 

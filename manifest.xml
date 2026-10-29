@@ -39,7 +39,7 @@
   </Function>
 
   <Rectangle x="0" y="0" w="#view_width" h="#view_height" fillColor="#F20B1220"/>
-  <Rectangle x="(#x0 - (16 * #scale))" y="(14 * #scale)" w="(6 * #scale)" h="((#y_cd + (33 * #scale)) - (14 * #scale))" fillColor="#FF3B82F6" cornerRadiusExp="(3 * #scale)"/>
+  <Rectangle x="(#x0 - (16 * #scale))" y="#y_title" w="(6 * #scale)" h="((#y_cd + (33 * #scale)) - #y_title)" fillColor="#FF3B82F6" cornerRadiusExp="(3 * #scale)"/>
 
   <Text x="#x0" y="#y_title" size="(26 * #scale)" color="#FFFFFFFF" fontFamily="mipro-demibold" width="#w" textExp="@c_title" multiLine="true" lineClamp="2" ellipsis="true" name="title"/>
   <Image x="(#view_width - (18 * #scale) - (28 * #scale))" y="(16 * #scale)" w="(28 * #scale)" h="(28 * #scale)" src="assets/xiaoai.png" alpha="235"/>
