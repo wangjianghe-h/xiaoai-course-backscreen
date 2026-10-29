@@ -1,0 +1,60 @@
+<Widget frameRate="1" useVariableUpdater="DateTime.Minute,DateTime.Second" scaleByDensity="false" screenWidth="1080" version="2" transparentSurface="true">
+  <Var name="scale" type="number" expression="(#view_height / 213)" const="true"/>
+  <Var name="x0" type="number" expression="(120 * #scale)" const="true"/>
+  <Var name="w" type="number" expression="(#view_width - #x0 - (22 * #scale))" const="true"/>
+  <Var name="rp" type="jsonO" expression="newJsonObject()" const="true"/>
+  <Var name="v1" type="jsonO" expression="newJsonObject()" const="true"/>
+  <Var name="c_title" type="string" expression="''" const="true"/>
+  <Var name="c_content" type="string" expression="''" const="true"/>
+  <Var name="c_hint" type="string" expression="''" const="true"/>
+  <Var name="c_meta" type="string" expression="''" const="true"/>
+  <Var name="c_label" type="string" expression="''" const="true"/>
+  <Var name="c_when" type="string" expression="''" const="true"/>
+  <Var name="t_when" type="number" expression="0" const="true"/>
+  <Var name="cd_sec" type="number" expression="max(0, int(((#t_when - #time_sys) / 1000)))"/>
+  <Var name="cd_m" type="number" expression="int(#cd_sec / 60)"/>
+  <Var name="cd_s" type="number" expression="int(#cd_sec - (#cd_m * 60))"/>
+  <Var name="cd_text" type="string" expression="(ifelse((#cd_m { 10), ('0' + #cd_m), ('' + #cd_m)) + ':' + ifelse((#cd_s { 10), ('0' + #cd_s), ('' + #cd_s)))"/>
+  <Var name="cd_show" type="number" expression="((len(@c_label) } 0) * (#t_when } 0))"/>
+  <Var name="title_long" type="number" expression="ifelse((len(@c_title) } 9), 1, 0)"/>
+  <Var name="y_title" type="number" expression="ifelse(#title_long, (20 * #scale), (34 * #scale))"/>
+  <Var name="line_h" type="number" expression="ifelse(#title_long, (32 * #scale), (34 * #scale))"/>
+  <Var name="y_content" type="number" expression="((#y_title + (#line_h * (1 + #title_long))) + (ifelse(#title_long, (5 * #scale), (6 * #scale))))"/>
+  <Var name="y_hint" type="number" expression="(#y_content + (ifelse(#title_long, (25 * #scale), (27 * #scale))))"/>
+  <Var name="y_meta" type="number" expression="(#y_hint + (ifelse(#title_long, (25 * #scale), (27 * #scale))))"/>
+  <Var name="y_cd" type="number" expression="(#y_meta + (ifelse(#title_long, (26 * #scale), (29 * #scale))))"/>
+
+  <Function name="loadData">
+    <MultiCommand condition="(len(@miui.rear.param) } 0)">
+      <VariableCommand name="rp" expression="strToJson(@miui.rear.param)" type="jsonO"/>
+      <VariableCommand name="v1" expression="jsonGetObject($rp, 'rear_param_v1')" type="jsonO"/>
+      <VariableCommand name="c_title" expression="jsonGetString($v1, 'title')" type="string"/>
+      <VariableCommand name="c_content" expression="jsonGetString($v1, 'content')" type="string"/>
+      <VariableCommand name="c_hint" expression="jsonGetString($v1, 'hint')" type="string"/>
+      <VariableCommand name="c_meta" expression="((jsonGetString($v1, 'section') + '   ') + jsonGetString($v1, 'teacher'))" type="string"/>
+      <VariableCommand name="c_label" expression="jsonGetString($v1, 'countdown_label')" type="string"/>
+      <VariableCommand name="c_when" expression="jsonGetString($v1, 'timer_when')" type="string"/>
+      <VariableCommand name="t_when" expression="num(@c_when)" type="number"/>
+    </MultiCommand>
+  </Function>
+
+  <Rectangle x="0" y="0" w="#view_width" h="#view_height" fillColor="#F20B1220"/>
+  <Rectangle x="(#x0 - (16 * #scale))" y="(14 * #scale)" w="(6 * #scale)" h="((#y_cd + (33 * #scale)) - (14 * #scale))" fillColor="#FF3B82F6" cornerRadiusExp="(3 * #scale)"/>
+
+  <Text x="#x0" y="#y_title" size="(26 * #scale)" color="#FFFFFFFF" fontFamily="mipro-demibold" width="#w" textExp="@c_title" multiLine="true" lineClamp="2" ellipsis="true" name="title"/>
+  <Image x="(#view_width - (18 * #scale) - (28 * #scale))" y="(16 * #scale)" w="(28 * #scale)" h="(28 * #scale)" src="assets/xiaoai.png" alpha="235"/>
+  <Text x="#x0" y="#y_content" size="(20 * #scale)" color="#FF6FD3FF" fontFamily="mipro-demibold" width="#w" textExp="@c_content" ellipsis="true" name="content"/>
+  <Text x="#x0" y="#y_hint" size="(20 * #scale)" color="#FF7CFFB2" fontFamily="mipro-medium" width="#w" textExp="@c_hint" ellipsis="true" name="hint"/>
+  <Text x="#x0" y="#y_meta" size="(15 * #scale)" color="#FFC9A6FF" fontFamily="mipro-medium" width="#w" textExp="@c_meta" ellipsis="true" name="meta"/>
+
+  <Text x="#x0" y="#y_cd" size="(24 * #scale)" color="#FFFFC24D" fontFamily="mipro-demibold" width="#w" visibility="#cd_show" textExp="(@c_label + '  ' + @cd_text)" ellipsis="true"/>
+
+  <ExternalCommands>
+    <Trigger action="init">
+      <FunctionCommand target="loadData"/>
+    </Trigger>
+    <Trigger action="notification_received">
+      <FunctionCommand target="loadData"/>
+    </Trigger>
+  </ExternalCommands>
+</Widget>
