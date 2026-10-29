@@ -1,0 +1,9 @@
+{
+  "type": "notification",
+  "minVersion": 251,
+  "name": "超级小爱课程表背屏",
+  "business_setup": {
+    "id": "xiaoai_course_schedule",
+    "renameable": false
+  }
+}
